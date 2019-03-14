@@ -39,13 +39,13 @@ let getSeeds n board =
         |12 -> board.f'
         |_ -> failwith "Out of range"
 
-let useHouse n board = 
-    let rec go a b c d e f a' b' c' d' e' f' temp nummoves = 
-        match temp = 0 with 
-            |true -> 1
-            |false -> go (b + 1) c d e f a' b' c' d' e' f' a (temp - 1) nummoves
-    match n with 
-        |1 -> go 0 board.b 
+let useHouse n board = failwith "do this"
+    
+    // input 1
+    // get 1's number
+    // if 1's num > 0 
+    // set 1 to 0
+    // rec while num > 0, move one, add one 
      
 
 let start position = {a = 4; b = 4; c = 4; d = 4; e = 4; f = 4; a' = 4; b' = 4; c' = 4; d' = 4; e' = 4; f' = 4; npoints = 0; spoints = 0; turn = position}
