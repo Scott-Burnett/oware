@@ -4,6 +4,23 @@ type StartingPosition =
     | South
     | North
 
+type board = {
+    a : int
+    b : int
+    c : int
+    d : int
+    e : int
+    f : int
+    a' : int 
+    b' : int
+    c' : int
+    d' : int
+    e' : int
+    f' : int
+    npoints : int
+    spoints : int
+} 
+    
 let getSeeds n board = failwith "Not implemented"
 
 let useHouse n board = failwith "Not implemented"
