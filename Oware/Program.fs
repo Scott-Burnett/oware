@@ -40,13 +40,27 @@ let getSeeds n board =
         |_ -> failwith "Out of range"
 
 let useHouse n board = 
+    let rec reset a b c d e f a' b' c' d' e' f' n =
+        match n = 0 with 
+            |true -> { a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c'; d' = d'; e' = e'; f' = f'; spoints = board.spoints; npoints = board.npoints; turn = board.turn }
+            |false -> reset f' a b c d e f a' b' c' d' e' (n - 1)
     let rec go a b c d e f a' b' c' d' e' f' temp nummoves = 
         match temp = 0 with 
-            |true -> 1
+            |true -> reset a b c d e f a' b' c' d' e' f' nummoves
             |false -> go (b + 1) c d e f a' b' c' d' e' f' a (temp - 1) nummoves
     match n with 
-        |1 -> go 0 board.b 
-     
+        |1 -> go 0 board.b board.c board.d board.e board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.a
+        |2 -> go 0 board.c board.d board.e board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b (board.b + n - 1)   
+        |3 -> go 0 board.d board.e board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b board.c (board.c + n - 1)
+        |4 -> go 0 board.e board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b board.c board.d (board.d + n - 1)
+        |5 -> go 0 board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b board.c board.d board.f (board.f + n - 1)
+        |6 -> go 0 board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b board.c board.d board.e board.f (board.f + n - 1)
+        |7 -> go 0 board.b' board.c' board.d' board.e' board.f' board.a board.b board.c board.d board.e board.f board.a' (board.a' + n - 1)
+        |8 -> go 0 board.c' board.d' board.e' board.f' board.a board.b board.c board.d board.e board.f board.a' board.b' (board.b' + n - 1)  
+        |9 -> go 0 board.d' board.e' board.f' board.a board.b board.c board.d board.e board.f board.a' board.b' board.c' (board.c' + n - 1)
+        |10 -> go 0 board.e' board.f' board.a board.b board.c board.d board.e board.f board.a' board.b' board.c' board.d' (board.d' + n - 1)
+        |11 -> go 0 board.f' board.a board.b board.c board.d board.e board.f board.a' board.b' board.c' board.d' board.f' (board.f' + n - 1)
+        |12 -> go 0 board.a board.b board.c board.d board.e board.f board.a' board.b' board.c' board.d' board.e' board.f' (board.f' + n - 1)
 
 let start position = {a = 4; b = 4; c = 4; d = 4; e = 4; f = 4; a' = 4; b' = 4; c' = 4; d' = 4; e' = 4; f' = 4; npoints = 0; spoints = 0; turn = position}
 
