@@ -1,5 +1,5 @@
 ﻿module Oware
-
+//Gibson
 type StartingPosition =
     | South
     | North
