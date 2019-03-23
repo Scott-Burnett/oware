@@ -88,5 +88,5 @@ let gameState board = match board.npoints > 25, board.spoints > 25 with
 
 [<EntryPoint>]
 let main _ =
-    printfn "Hello from F#!"
+    printfn "Hello from F#!!"
     0 // return an integer exit code
