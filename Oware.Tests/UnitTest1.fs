@@ -52,12 +52,12 @@ let ``When house 3 is used, seeds go to the other houses`` () =
 [<Test>]
 let ``When house 4 is used, seeds go to the other houses`` () =
     let board = start South |> useHouse 4
-    board |> hasSeedCount (4,4,4,0,5,5,5,5,4,4,4,4)
+    board |> hasSeedCount (4,4,4,0,5,5,5,5,4,4,4,4)  //4,4,4,0,5,5,5,5,4,4,4,4
 
 [<Test>]
 let ``When house 5 is used, seeds go to the other houses`` () =
     let board = start South |> useHouse 5
-    board |> hasSeedCount (4,4,4,4,0,5,5,5,5,4,4,4)
+    board |> hasSeedCount (4,4,4,4,0,5,5,5,5,4,4,4)  //   original 4,4,4,4,0,5,5,5,5,4,4,4
 
 [<Test>]
 let ``When house 6 is used, seeds go to the other houses`` () =
@@ -124,10 +124,10 @@ let ``You cannot sow from an empty house`` () =
     game |> hasSeedCount (5, 5, 5, 0, 5, 5, 5, 5, 4, 4, 0, 5)
     gameState game |> should equal "South's turn"
 
-[<Test>]
+[<Test>]                                                                //From here on
 let ``Seeds can't be captured from your own side`` () =
     let game = playGame [1; 7; 2; 8; 3; 9; 4; 12; 5]
-    game |> hasSeedCount (4, 3, 2, 1, 0, 9, 5, 3, 2, 9, 9, 1)
+    game |> hasSeedCount (4, 3, 2, 1, 0, 9, 5, 3, 2, 9, 9, 1)       //4,2,2,1,0,9,5,3,2,9,9,1
     score game |> should equal (0, 0)
 
 [<Test>]

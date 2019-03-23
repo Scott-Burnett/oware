@@ -64,7 +64,7 @@ let useHouse n board =
             |2 -> go 0 board.c board.d board.e board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b 1 0 
             |3 -> go 0 board.d board.e board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b board.c 2 0
             |4 -> go 0 board.e board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b board.c board.d 3 0
-            |5 -> go 0 board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b board.c board.d board.f 4 0
+            |5 -> go 0 board.f board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b board.c board.d board.f 4 0  //This is where the problem is (doesn't work when < 5) 
             |6 -> go 0 board.a' board.b' board.c' board.d' board.e' board.f' board.a board.b board.c board.d board.e board.f 5 0
             |7 -> go 0 board.b' board.c' board.d' board.e' board.f' board.a board.b board.c board.d board.e board.f board.a' 6 0
             |8 -> go 0 board.c' board.d' board.e' board.f' board.a board.b board.c board.d board.e board.f board.a' board.b' 7 0
