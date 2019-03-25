@@ -137,7 +137,7 @@ let ``Seeds aren't captured on a non-final space`` () =
 [<Test>]
 let ``Contiguous captured seeds are taken`` () =
     let game = playGame [1; 12; 5; 11; 2; 10; 3]
-    game |> hasSeedCount (3, 1, 0, 8, 2, 7, 7, 7, 7, 1, 0, 0)
+    game |> hasSeedCount (3, 1, 0, 8, 2, 7, 7, 7, 7, 1, 0, 0) 
     score game |> should equal (5, 0)
     gameState game |> should equal "North's turn"
 
@@ -188,6 +188,6 @@ let ``A draw exists when each side has 24 pieces`` () =
     let game = playGame [6; 8; 5; 9; 4; 12; 3; 10; 1; 11; 2; 12; 5; 7; 5; 11; 6; 8; 1; 12; 4; 10; 5; 9;
  2; 11; 3; 12; 6; 9; 5; 10; 2; 11; 1; 12; 4; 7; 6; 7; 3; 8; 5; 9; 6; 10; 1; 11;
  2; 12; 3; 8; 4; 9; 1; 10; 6; 7; 2; 8; 3; 9; 4; 10; 5; 11; 6; 12]
-    game |> hasSeedCount (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    game |> hasSeedCount (0,0,0,0,0,0,0,0,0,0,0,0)
     score game |> should equal (24, 24)
     gameState game |> should equal "Game ended in a draw"
