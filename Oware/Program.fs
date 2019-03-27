@@ -130,9 +130,28 @@ let gameState board =
             |South -> "South's turn"
             |North -> "North's turn"
 
+let print (a, b, c, d, e, f, a', b', c', d', e', f', spoints, npoints, turn, offset) = 
+  printf "\n\t\t\t%i\n\t%i\t%i\t%i\t%i\t%i\t%i\n\t\t      %A\n\t%i\t%i\t%i\t%i\t%i\t%i\n\t\t\t%i\n\n" npoints a b c d e f turn a' b' c' d' e' f' spoints
+
+
+let rec play uinput game =
+        match uinput with
+        |1 -> useHouse uinput game
+        |2 -> useHouse uinput game
+        |3 -> useHouse uinput game
+        |4 -> useHouse uinput game
+        |5 -> useHouse uinput game
+        |6 -> useHouse uinput game
+        |7 -> useHouse uinput game
+        |8 -> useHouse uinput game
+        |9 -> useHouse uinput game
+        |10 -> useHouse uinput game
+        |11 -> useHouse uinput game
+        |12 -> useHouse uinput game
+print (4,4,4,4,4,4,4,4,4,4,4,4,0,0,South,0)
 
 [<EntryPoint>]
 let main _ =
-    printfn "you suck at this"
-    0 // return an integer exit code
+    play 1 (start South)
+    0 // return an integer exit code//print (4,4,4,4,4,4,4,4,4,4,4,4,0,0,South,0) //4,4,4,4,4,4,4,4,4,4,4,4,0,0,South,0
 
