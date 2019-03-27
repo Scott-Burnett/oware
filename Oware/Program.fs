@@ -1,6 +1,7 @@
 ﻿module Oware
 
 open System.IO
+open System.Net
 
 type StartingPosition =
     | South
@@ -39,6 +40,13 @@ let getSeeds n board =
         |12 -> board.f'
         |_ -> failwith "Out of range"
 
+let updateConsole ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c'; d' = d'; e' = e'; f' = f'; spoints = spoints; npoints = npoints; turn = turn} as board) =
+    System.Console.WriteLine ("---------------------------NORTH---------------------------")
+    System.Console.WriteLine ("-------------------------POINTS: {0}-------------------------", npoints)
+    System.Console.WriteLine ("\t[{0}]\t[{1}]\t[{2}]\t[{3}]\t[{4}]\t[{5}]", a, b, c, d, e, f)
+    System.Console.WriteLine ("\t===========================================")
+    System.Console.WriteLine ("\t[{0}]\t[{1}]\t[{2}]\t[{3}]\t[{4}]\t[{5}]", a', b', c', d', e', f')
+    ()
 let houseBelongsToPlayer n board =
     ((n > 0 && n < 7 && board.turn = South) || (n > 5 && n < 13 && board.turn = North))
 
@@ -80,11 +88,13 @@ let rec sowseeds (a, b, c, d, e, f, a', b', c', d', e', f', spoints, npoints, tu
             |true, false -> getpoints ((a + 1), b, c, d, e, f, a', b', c', d', e', f', spoints, npoints, turn, offset)        
     inner a b c d e f a' b' c' d' e' f' spoints npoints turn offset numseeds cycles
 
-let noValidTurns ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c'; d' = d'; e' = e'; f' = f'} as board) =
-    (a < 6 && b < 5 && c < 4 && d < 3 && e < 2 && f < 1 && a' < 6 && b' < 5 && c' < 4 && d' < 3 && e' < 2 && f' < 1)
+let noValidTurns ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c'; d' = d'; e' = e'; f' = f'; turn = turn} as board) =
+    match turn = South with
+        |true -> (a < 6 && b < 5 && c < 4 && d < 3 && e < 2 && f < 1) && (a' = 0 && b' = 0 && c' = 0 && d' = 0 && e' = 0 && f' = 0)
+        |false -> (a = 0 && b = 0 && c = 0 && d = 0 && e = 0 && f = 0) && (a' < 6 && b' < 5 && c' < 4 && d' < 3 && e' < 2 && f' < 1)
 
 let cleanUp ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c'; d' = d'; e' = e'; f' = f'; spoints = spoints; npoints = npoints; turn = turn} as board) =
-    {a = 0; b = 0; c = 0; d = 0; e = 0; f = 0; a' = 0; b' = 0; c' = 0; d' = 0; e' = 0; f' = 0; spoints = spoints + a + b + c + d + e + f; npoints = npoints + a' + b' + c' + d' + e' + f'; turn = turn }
+    {a = 0; b = 0; c = 0; d = 0; e = 0; f = 0; a' = 0; b' = 0; c' = 0; d' = 0; e' = 0; f' = 0; spoints = (spoints + a + b + c + d + e + f); npoints = (npoints + a' + b' + c' + d' + e' + f'); turn = turn }
 
 let useHouse n ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c'; d' = d'; e' = e'; f' = f'; spoints = spoints; npoints = npoints; turn = turn } as board) = 
     let newboard = 
@@ -105,9 +115,10 @@ let useHouse n ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' 
                     |12 -> sowseeds (a, b, c, d, e, f, a', b', c', d', e', 0, spoints, npoints, turn, 0) f' 1
                     |_ -> board
                 |false -> board
-        match pHasNoSeeds newboard with
-            |true -> board
-            |false -> newboard
+        match pHasNoSeeds newboard, noValidTurns board with
+            |_, true -> cleanUp board  
+            |true, _ -> board 
+            |false, false -> newboard              
     newboard
 //UseHouse
 
@@ -127,5 +138,6 @@ let gameState board =
 
 [<EntryPoint>]
 let main _ =
-    printfn "Hello from F#!"
+    let nothing = updateConsole (start North)
+    System.Console.ReadKey() |> ignore
     0 // return an integer exit code
