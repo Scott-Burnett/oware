@@ -60,19 +60,25 @@ let getSeeds n board =
         |_ -> failwith "Out of range"
 //getSeeds
 
-let updateConsole ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c'; d' = d'; e' = e'; f' = f'; spoints = spoints; npoints = npoints; turn = turn} as board) =
+let updateConsole ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c'; d' = d'; e' = e'; f' = f'; spoints = spoints; npoints = npoints; turn = turn} as board) message =
     System.Console.Clear ()
-    System.Console.WriteLine ("\n\t---------------------------NORTH----------------------------")
-    System.Console.WriteLine ("\t-------------------------POINTS: {0}--------------------------", npoints)
-    System.Console.WriteLine ("\t ||  ||                                              ||  ||")
-    System.Console.WriteLine ("\t ||  ||  [{0}]\t[{1}]\t[{2}]\t[{3}]\t[{4}]\t[{5}]  ||  ||", a, b, c, d, e, f)
-    System.Console.WriteLine ("\t=====||==============================================||=====")
-    System.Console.WriteLine ("\t ||  ||  [{0}]\t[{1}]\t[{2}]\t[{3}]\t[{4}]\t[{5}]  ||  ||", a', b', c', d', e', f')
-    System.Console.WriteLine ("\t ||  ||                                              ||  ||")
-    System.Console.WriteLine ("\t-------------------------POINTS: {0}--------------------------", spoints)
-    System.Console.WriteLine ("\t---------------------------SOUTH----------------------------")
+    System.Console.WriteLine ("\n\t\t---------------------------------------------------------------\n\t\t\t\t\t " + gameState board + "\n\t\t===============================================================")
+    System.Console.WriteLine ("\t\t                            NORTH")
+    System.Console.WriteLine ("\t\t--------------------------POINTS: {0}----------------------------", npoints)
+    System.Console.WriteLine ("\t\t ||  ||                                                 ||  ||")
+    System.Console.WriteLine ("\t\t ||  ||  12 [{0}]\t11 [{1}]\t10 [{2}]\t9  [{3}]\t8  [{4}]\t7  [{5}]  ||  ||", f', e', d', c', b', a'  )
+    System.Console.WriteLine ("\t\t=====||=================================================||=====")
+    System.Console.WriteLine ("\t\t ||  ||  1  [{0}]\t2  [{1}]\t3  [{2}]\t4  [{3}]\t5  [{4}]\t6  [{5}]  ||  ||", a, b, c, d, e, f)
+    System.Console.WriteLine ("\t\t ||  ||                                                 ||  ||")
+    System.Console.WriteLine ("\t\t--------------------------POINTS: {0}----------------------------", spoints)
+    System.Console.WriteLine ("\t\t                           SOUTH")
+    System.Console.WriteLine ("\t\t===============================================================\n\t\t\t\t" + message + "\n\t\t---------------------------------------------------------------")
     ()
 //updateConsole
+
+let readInput () =
+    int32 (System.Console.ReadLine())
+
 
 let houseBelongsToPlayer n board =
     ((n > 0 && n < 7 && board.turn = South) || (n > 5 && n < 13 && board.turn = North))
@@ -122,8 +128,8 @@ let getpoints (a, b, c, d, e, f, a', b', c', d', e', f', spoints, npoints, turn,
             |true, false, true -> inner f' 0 b c d e f a' b' c' d' e' (spoints + a) npoints turn ((offset + 11) % 12)
             |_, _, _ -> let nextboard = nextTurn (getboard (a, b, c, d, e, f, a', b', c', d', e', f', spoints, npoints, turn, offset))
                         match turnWasAllowed nextboard with
-                            |true -> nextboard
-                            |false -> justInCaseBoard
+                            |true -> (nextboard, "Please choose a house to sow from")
+                            |false -> (justInCaseBoard, "Cannot capture all of your opponent's seeds")
     inner a b c d e f a' b' c' d' e' f' spoints npoints turn offset
 //getpoints
 
@@ -147,35 +153,46 @@ let cleanUp ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c
 //cleanUp
 
 let useHouse n ({a = a; b = b; c = c; d = d; e = e; f = f; a' = a'; b' = b'; c' = c'; d' = d'; e' = e'; f' = f'; spoints = spoints; npoints = npoints; turn = turn } as board) = 
-    let newboard = 
+    let (newboard, message) = 
         match noValidTurns board with
-            |true -> cleanUp board
-            |false -> let newboard =
-                        match (houseBelongsToPlayer n board) && (houseIsNotEmpty n board) with
-                            |true -> match n with 
-                                        |1 -> sowseeds (b, c, d, e, f, a', b', c', d', e', f', 0, spoints, npoints, turn, 1) a 1
-                                        |2 -> sowseeds (c, d, e, f, a', b', c', d', e', f', a, 0, spoints, npoints, turn, 2) b 1 
-                                        |3 -> sowseeds (d, e, f, a', b', c', d', e', f', a, b, 0, spoints, npoints, turn, 3) c 1
-                                        |4 -> sowseeds (e, f, a', b', c', d', e', f', a, b, c, 0, spoints, npoints, turn, 4) d 1
-                                        |5 -> sowseeds (f, a', b', c', d', e', f', a, b, c, d, 0, spoints, npoints, turn, 5) e 1
-                                        |6 -> sowseeds (a', b', c', d', e', f', a, b, c, d, e, 0, spoints, npoints, turn, 6) f 1
-                                        |7 -> sowseeds (b', c', d', e', f', a, b, c, d, e, f, 0, spoints, npoints, turn, 7) a' 1
-                                        |8 -> sowseeds (c', d', e', f', a, b, c, d, e, f, a', 0, spoints, npoints, turn, 8) b' 1
-                                        |9 -> sowseeds (d', e', f', a, b, c, d, e, f, a', b', 0, spoints, npoints, turn, 9) c' 1
-                                        |10 -> sowseeds (e', f', a, b, c, d, e, f, a', b', c', 0, spoints, npoints, turn, 10) d' 1
-                                        |11 -> sowseeds (f', a, b, c, d, e, f, a', b', c', d', 0, spoints, npoints, turn, 11) e' 1
-                                        |12 -> sowseeds (a, b, c, d, e, f, a', b', c', d', e', 0, spoints, npoints, turn, 0) f' 1
-                                        |_ -> board   
-                            |false -> board
-                      match pHasNoSeeds newboard && not (isEmpty newboard) with
-                          |true -> board 
-                          |false -> newboard           
-        
+            |true -> (cleanUp board, "")
+            |false -> let (newboard, message) =
+                          match (houseBelongsToPlayer n board), (houseIsNotEmpty n board) with
+                              |true, true -> match n with 
+                                      |1 -> sowseeds (b, c, d, e, f, a', b', c', d', e', f', 0, spoints, npoints, turn, 1) a 1
+                                      |2 -> sowseeds (c, d, e, f, a', b', c', d', e', f', a, 0, spoints, npoints, turn, 2) b 1 
+                                      |3 -> sowseeds (d, e, f, a', b', c', d', e', f', a, b, 0, spoints, npoints, turn, 3) c 1
+                                      |4 -> sowseeds (e, f, a', b', c', d', e', f', a, b, c, 0, spoints, npoints, turn, 4) d 1
+                                      |5 -> sowseeds (f, a', b', c', d', e', f', a, b, c, d, 0, spoints, npoints, turn, 5) e 1
+                                      |6 -> sowseeds (a', b', c', d', e', f', a, b, c, d, e, 0, spoints, npoints, turn, 6) f 1
+                                      |7 -> sowseeds (b', c', d', e', f', a, b, c, d, e, f, 0, spoints, npoints, turn, 7) a' 1
+                                      |8 -> sowseeds (c', d', e', f', a, b, c, d, e, f, a', 0, spoints, npoints, turn, 8) b' 1
+                                      |9 -> sowseeds (d', e', f', a, b, c, d, e, f, a', b', 0, spoints, npoints, turn, 9) c' 1
+                                      |10 -> sowseeds (e', f', a, b, c, d, e, f, a', b', c', 0, spoints, npoints, turn, 10) d' 1
+                                      |11 -> sowseeds (f', a, b, c, d, e, f, a', b', c', d', 0, spoints, npoints, turn, 11) e' 1
+                                      |12 -> sowseeds (a, b, c, d, e, f, a', b', c', d', e', 0, spoints, npoints, turn, 0) f' 1
+                                      |_ -> (board, "Out of range")  
+                              |false, true -> (board, "You cannot choose your opponants house")        
+                              |_, false -> (board, "You cannot sow from an empty house") 
+                      match not (turnWasAllowed newboard) with
+                          |true -> (board, "You must play to give your opponent pieces if they have none") 
+                          |false -> newboard, message  
+    updateConsole newboard message                      
     newboard
 //useHouse
 
+let play board =
+    let rec inner board =
+        match gameState board with
+        |"North's turn"|"South's turn" -> inner (useHouse (readInput ()) board)                             
+        |_ -> board
+    inner board
+
+
 [<EntryPoint>]
 let main _ =
-    let nothing = updateConsole (start North)
+    let board = start South
+    let nothing = updateConsole board ""
+    let anothernothing = play board
     System.Console.ReadKey() |> ignore
     0 // return an integer exit code
